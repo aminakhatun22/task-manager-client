@@ -8,28 +8,10 @@ import { AuthContext } from '../../contexts/AuthProvider';
 
 const SignUp = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const { createUser, updateUser, handleGoogleSignIn } = useContext(AuthContext);
+    const { handleGoogleSignIn, createUser } = useContext(AuthContext);
     const [signUpError, setSignUpError] = useState('');
     const [googleRegisterError, setGoogleRegisterError] = useState('');
-
-
     const navigate = useNavigate();
-    // const onSubmit = data => {
-    //     const newData = { ...data, role: 'seller' }
-    // };
-    const handleGoogle = () => {
-        handleGoogleSignIn()
-            .then(result => {
-                const user = result.user;
-
-                saveUser(user?.displayName, user.email, 'user')
-            })
-            .catch(error => {
-
-                setGoogleRegisterError(error.message)
-            });
-    }
-
     const handleSignUp = data => {
 
         setSignUpError('')
@@ -37,39 +19,27 @@ const SignUp = () => {
             .then(result => {
                 const user = result.user;
                 console.log(user);
-                toast('User Created Successfully');
+
                 const userInfo = {
                     displayName: data.name
                 }
-                updateUser(userInfo)
-                    .then(() => {
-                        saveUser(data.name, data.email, data.role);
 
-                    })
-                    .catch(err => console.log(err));
+
+
             })
+
+
             .catch(error => {
                 console.log(error)
                 setSignUpError(error.message)
             });
+
+        toast('User Created Successfully');
+        navigate('/')
     }
 
-    const saveUser = (name, email, role) => {
-        const user = { name, email, role };
-        fetch('https://quality-consoles-server.vercel.app/users', {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-            .then(res => res.json())
-            .then(data => {
-                console.log("save user", data);
 
-                navigate('/');
-            })
-    }
+
     return (
         <div className='h-[800px] flex justify-center items-center'>
             <div className='w-96 p-7'>
@@ -102,7 +72,7 @@ const SignUp = () => {
                 <p>Already have an account <Link className='text-pink-400' to='/login'>Please login</Link></p>
                 <div className="flex flex-col w-full border-opacity-50">
                     <div className="divider">OR</div>
-                    <button onClick={handleGoogle} className='btn btn-primary text-white'>CONTINUE WITH GOOGLE</button>
+                    <button onClick={handleGoogleSignIn} className='btn btn-primary text-white'>CONTINUE WITH GOOGLE</button>
                 </div>
             </div>
 

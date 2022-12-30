@@ -1,11 +1,21 @@
+import { useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../../../contexts/AuthProvider';
 
 function NavBar() {
+    const { user, logOut } = useContext(AuthContext);
+
+    const handleLogOut = () => {
+        logOut()
+            .then(() => { })
+            .catch(err => console.log(err));
+    }
     return (
         <Navbar bg="light" expand="lg">
             <Container fluid>
@@ -25,14 +35,17 @@ function NavBar() {
 
                     </Nav>
                     <Form className="d-flex">
-                        {/* <Form.Control
-                            type="search"
-                            placeholder="Search"
-                            className="me-2"
-                            aria-label="Search"
-                        /> */}
-                        {/* <Button variant="outline-success">Search</Button> */}
-                        <Nav.Link href="/login">Login</Nav.Link>
+                        {
+                            user?.uid ?
+
+
+
+                                <li><Button onClick={handleLogOut}>Logout</Button></li>
+                                :
+                                <Nav.Link href="/login">Login</Nav.Link>
+
+                        }
+
                     </Form>
                 </Navbar.Collapse>
             </Container>
